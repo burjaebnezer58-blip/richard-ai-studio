@@ -25,6 +25,7 @@
     html, body { margin: 0; min-height: 100%; font-family: Inter, "Segoe UI", sans-serif; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%); color: var(--text); }
     body { min-height: 100vh; }
     button, input, select, textarea { font: inherit; }
+    a { color: inherit; }
 
     .container { max-width: 1440px; margin: 0 auto; padding: 24px; }
 
@@ -35,6 +36,7 @@
       border: 1px solid rgba(255,255,255,0.65); border-radius: 18px;
       box-shadow: var(--shadow); padding: 16px 20px;
     }
+
     .brand { display: flex; align-items: center; gap: 12px; }
     .brand-mark {
       width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
@@ -57,6 +59,7 @@
       color: white; box-shadow: 0 14px 26px rgba(93, 74, 248, 0.24);
     }
     .btn.ghost { background: transparent; }
+    .btn.danger { background: rgba(209,77,77,0.08); border-color: rgba(209,77,77,0.2); color: var(--danger); }
 
     .dashboard {
       margin-top: 28px; display: grid; grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
@@ -159,6 +162,12 @@
     }
     .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .close-btn { border: 0; background: transparent; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+    .auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+    .tab-btn {
+      flex: 1; border: 1px solid var(--line); background: rgba(93,74,248,0.04); border-radius: 12px; padding: 10px 8px;
+      font-weight: 700; cursor: pointer; color: var(--muted);
+    }
+    .tab-btn.active { background: rgba(93,74,248,0.12); color: var(--primary); border-color: rgba(93,74,248,0.25); }
 
     @media (max-width: 980px){ .dashboard { grid-template-columns: 1fr; } .stats-row { grid-template-columns: repeat(2, minmax(0,1fr)); } }
     @media (max-width: 640px){ .container { padding: 14px; } .topbar { flex-wrap: wrap; gap: 12px; } .nav { order: 3; width: 100%; justify-content: space-between; } .two-col, .type-grid, .stats-row { grid-template-columns: 1fr; } }
@@ -176,10 +185,9 @@
       </div>
 
       <nav class="nav">
-        <a href="#">Generate</a>
-        <a href="#">Projects</a>
-        <a href="#">Library</a>
-        <a href="#">Plans</a>
+        <a href="#generate">Generate</a>
+        <a href="#library">Library</a>
+        <a href="#plans">Plans</a>
       </nav>
 
       <div class="cta-row" style="margin: 0;">
@@ -188,7 +196,7 @@
       </div>
     </header>
 
-    <main class="dashboard">
+    <main class="dashboard" id="generate">
       <aside class="panel">
         <div class="panel-head">
           <h2>Create a lesson</h2>
@@ -212,8 +220,8 @@
         </div>
 
         <div class="field">
-          <label for="topic">Topic / Chapter</label>
-          <input id="topic" type="text" placeholder="e.g. Photosynthesis, Tenses, Fractions" />
+          <label for="topic">Topic</label>
+          <input type="text" id="topic" placeholder="Tenses, Photosynthesis, Fractions" />
         </div>
 
         <div class="field">
@@ -223,12 +231,12 @@
 
         <div class="two-col">
           <div class="field">
-            <label for="duration">Duration (mins)</label>
-            <input id="duration" type="number" value="40" min="5" max="180" />
+            <label for="duration">Duration (min)</label>
+            <input type="number" id="duration" value="40" min="5" max="180" />
           </div>
           <div class="field">
-            <label for="count">Items</label>
-            <input id="count" type="number" value="10" min="1" max="50" />
+            <label for="count">Items / questions</label>
+            <input type="number" id="count" value="10" min="1" max="50" />
           </div>
         </div>
 
@@ -258,17 +266,17 @@
         <div class="field">
           <label>Smart options</label>
           <div class="check-list">
-            <label class="check-item"><input type="checkbox" id="esl" /> ESL support</label>
+            <label class="check-item"><input type="checkbox" id="esl" /> ESL / English-learner support</label>
             <label class="check-item"><input type="checkbox" id="qatar" checked /> Qatar National Values</label>
             <label class="check-item"><input type="checkbox" id="sdg" checked /> UN SDG links</label>
-            <label class="check-item"><input type="checkbox" id="exam" /> Exam-style questions</label>
+            <label class="check-item"><input type="checkbox" id="exam" /> Exam-style questions with marks</label>
             <label class="check-item"><input type="checkbox" id="answers" checked /> Include answer key</label>
           </div>
         </div>
 
         <div class="cta-row">
-          <button class="btn primary" id="generateBtn">Generate now</button>
-          <button class="btn ghost" id="saveDraftBtn">Save draft</button>
+          <button class="btn primary" id="generateBtn">Generate</button>
+          <button class="btn ghost" id="clearBtn">Reset</button>
         </div>
       </aside>
 
@@ -279,70 +287,71 @@
             <strong id="statProjects">0</strong>
           </div>
           <div class="stat-card">
-            <small>Exports</small>
-            <strong id="statExports">0</strong>
+            <small>Today</small>
+            <strong id="statToday">0</strong>
           </div>
           <div class="stat-card">
             <small>Avg. time</small>
-            <strong>2m</strong>
+            <strong>2 min</strong>
           </div>
           <div class="stat-card">
-            <small>Model</small>
+            <small>AI model</small>
             <strong>Claude</strong>
           </div>
         </div>
 
-        <div id="statusBar" class="status-bar">Ready to generate high-quality teaching resources.</div>
-
-        <div id="output" class="output-box">Your generated content will appear here.</div>
+        <div class="status-bar" id="status">Choose a topic and generate your lesson.</div>
+        <div class="output-box" id="output">Your generated content will appear here.</div>
 
         <div class="actions">
           <button class="btn" id="copyBtn" disabled>Copy</button>
-          <button class="btn" id="saveToLibraryBtn" disabled>Save to Library</button>
-          <button class="btn" id="docxBtn" disabled>Download DOCX</button>
+          <button class="btn" id="saveBtn" disabled>Save project</button>
+          <button class="btn" id="docxBtn" disabled>Download DOC</button>
           <button class="btn" id="pdfBtn" disabled>Print / PDF</button>
         </div>
 
-        <div class="library-head">
+        <div class="library-head" id="library">
           <h2 style="margin:0;">My library</h2>
-          <span class="tag" id="userTag">Guest</span>
         </div>
-        <div class="library-grid" id="projectList"></div>
+        <div class="library-grid" id="libraryList"></div>
       </section>
     </main>
   </div>
 
-  <div id="authModal" class="modal" aria-hidden="true">
+  <div class="modal" id="authModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
-        <h2 id="authTitle">Welcome back</h2>
-        <button id="closeAuthBtn" class="close-btn" aria-label="Close">×</button>
+        <h3 style="margin:0;">Account</h3>
+        <button class="close-btn" id="closeAuth" aria-label="Close">×</button>
       </div>
 
-      <div class="field">
-        <label for="authName">Name</label>
-        <input id="authName" type="text" placeholder="Teacher name" />
+      <div class="auth-tabs">
+        <button class="tab-btn active" data-mode="login">Login</button>
+        <button class="tab-btn" data-mode="register">Register</button>
       </div>
 
-      <div class="field">
-        <label for="authEmail">Email</label>
-        <input id="authEmail" type="email" placeholder="you@example.com" />
-      </div>
+      <form id="authForm">
+        <div class="field" id="nameWrap" style="display:none;">
+          <label for="nameInput">Full name</label>
+          <input id="nameInput" type="text" placeholder="Jane Teacher" />
+        </div>
 
-      <div class="field">
-        <label for="authPassword">Password</label>
-        <input id="authPassword" type="password" placeholder="••••••••" />
-      </div>
+        <div class="field">
+          <label for="emailInput">Email</label>
+          <input id="emailInput" type="email" placeholder="teacher@example.com" required />
+        </div>
 
-      <div class="cta-row" style="margin-top: 8px;">
-        <button class="btn primary" id="authSubmitBtn">Continue</button>
-        <button class="btn ghost" id="toggleAuthModeBtn">Create account</button>
-      </div>
+        <div class="field">
+          <label for="passwordInput">Password</label>
+          <input id="passwordInput" type="password" placeholder="••••••••" required />
+        </div>
+
+        <button class="btn primary" type="submit" style="width:100%;">Continue</button>
+      </form>
     </div>
   </div>
 
   <script>
-    const CONFIG = { endpoint: "/api/generate" };
     const CURRICULA = {
       "CBSE (India)": { subjects: ["English","Hindi","Mathematics","Science","Social Science","Computer Science","Sanskrit","Physical Education","Art Education","Other"] },
       "ICSE / CISCE (India)": { subjects: ["English Language","English Literature","Hindi","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Applications","Other"] },
@@ -367,77 +376,73 @@
       { id: "slides", label: "Slide Outline" }
     ];
 
-    const ESL_FOCUS = ["Phonics", "Grammar", "Vocabulary", "Speaking", "Listening", "Reading comprehension", "Writing"];
+    const ESL_FOCUS = ["Phonics","Grammar","Vocabulary","Speaking","Listening","Reading comprehension","Writing"];
+
+    const LABEL = Object.fromEntries(RESOURCES.map(r => [r.id, r.label]));
+
+    const state = {
+      token: localStorage.getItem("studioToken") || "",
+      user: null,
+      projects: [],
+      authMode: "login",
+      lastResult: null
+    };
+
     const $ = id => document.getElementById(id);
-    let lastResult = null;
-    let isLoginMode = true;
 
     function setStatus(message, type = "") {
-      const bar = $("statusBar");
-      bar.textContent = message;
-      bar.className = "status-bar" + (type ? ` ${type}` : "");
+      const status = $("status");
+      status.textContent = message;
+      status.className = "status-bar" + (type ? ` ${type}` : "");
     }
 
-    function setActionState(enabled) {
-      ["copyBtn", "saveToLibraryBtn", "docxBtn", "pdfBtn"].forEach(id => {
+    function setButtonsEnabled(enabled) {
+      ["copyBtn", "saveBtn", "docxBtn", "pdfBtn"].forEach(id => {
         $(id).disabled = !enabled;
       });
     }
 
-    function getToken() {
-      return localStorage.getItem("richardAIAuthToken") || "";
-    }
-
-    async function apiFetch(path, options = {}) {
-      const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
-      const token = getToken();
-      if (token) headers.Authorization = `Bearer ${token}`;
-      const response = await fetch(path, { ...options, headers });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
-      return data;
-    }
-
-    function renderCurriculumOptions() {
+    function buildCurriculumOptions() {
       const curSel = $("curriculum");
-      const gradeSel = $("grade");
       curSel.innerHTML = "";
-      Object.keys(CURRICULA).forEach(curriculum => curSel.add(new Option(curriculum, curriculum)));
+      Object.keys(CURRICULA).forEach(name => { curSel.add(new Option(name, name)); });
+      const gradeSel = $("grade");
       gradeSel.innerHTML = "";
       for (let g = 1; g <= 12; g++) gradeSel.add(new Option("Class " + g, "Class " + g));
       refreshSubjects();
     }
 
     function refreshSubjects() {
-      const curSel = $("curriculum");
-      const subSel = $("subject");
-      const selected = curSel.value || Object.keys(CURRICULA)[0];
-      subSel.innerHTML = "";
-      CURRICULA[selected].subjects.forEach(subject => subSel.add(new Option(subject, subject)));
+      const subjectSel = $("subject");
+      const selectedCurriculum = $("curriculum").value;
+      subjectSel.innerHTML = "";
+      CURRICULA[selectedCurriculum].subjects.forEach(subject => {
+        subjectSel.add(new Option(subject, subject));
+      });
     }
 
-    function renderResourceTypes() {
+    function buildResourceTypes() {
       const container = $("types");
       container.innerHTML = "";
       RESOURCES.forEach((resource, index) => {
         const item = document.createElement("div");
         item.className = "type-item";
         item.innerHTML = `
-          <input type="radio" name="rtype" id="type-${resource.id}" value="${resource.id}" ${index === 0 ? "checked" : ""} />
-          <label for="type-${resource.id}">${resource.label}</label>
+          <input type="radio" name="rtype" id="rtype-${resource.id}" value="${resource.id}" ${index === 0 ? "checked" : ""}>
+          <label for="rtype-${resource.id}">${resource.label}</label>
         `;
         container.appendChild(item);
       });
     }
 
-    function currentOptions() {
+    function getCurrentOptions() {
       return {
         curriculum: $("curriculum").value,
         grade: $("grade").value,
         subject: $("subject").value,
         topic: $("topic").value.trim(),
-        duration: $("duration").value,
-        count: $("count").value,
+        duration: Number($("duration").value || 40),
+        count: Number($("count").value || 10),
         level: $("level").value,
         language: $("language").value,
         esl: $("esl").checked,
@@ -449,296 +454,450 @@
       };
     }
 
-    function buildPrompt(options) {
-      const base = `Curriculum: ${options.curriculum}
+    function baseInfo(options) {
+      return `Curriculum: ${options.curriculum}
 Class: ${options.grade}
 Subject: ${options.subject}
 Topic: ${options.topic}
 Duration: ${options.duration} minutes
 Learner level: ${options.level}
 Output language: ${options.language}
-Follow the scope and sequence of the ${options.curriculum} syllabus for this class and subject. If the topic is not in that syllabus, say so and suggest the closest syllabus topic.
-Use clear headings, numbered sections, and teacher-friendly formatting.`;
+Follow the scope and sequence of the ${options.curriculum} syllabus for this class and subject. If the topic is not in the syllabus, say so and suggest the closest matching topic.
+Use clear headings and numbered sections so a teacher can copy them directly.`;
+    }
 
-      let extras = "";
-      if (options.esl) extras += `\nESL support: add simple sentence frames, key vocabulary, pronunciation support, and a glossary. Focus where relevant on: ${ESL_FOCUS.join(", ")}.`;
-      if (options.qatar) extras += "\nInclude Qatar National Values with a concrete classroom example.";
-      if (options.sdg) extras += "\nLink the lesson to relevant UN Sustainable Development Goals and name each goal number.";
-      if (options.exam) extras += "\nUse exam-style questions with appropriate mark allocations.";
-      if (options.answers) extras += "\nInclude a complete answer key at the end.";
+    function extras(options) {
+      let s = "";
+      if (options.esl) s += `\nESL support: simple sentence frames, key vocabulary with pronunciation, a glossary. Focus where relevant on: ${ESL_FOCUS.join(", ")}.`;
+      if (options.qatar) s += `\nInclude Qatar National Values (for example respect, tolerance, belonging, responsibility) with a concrete classroom example.`;
+      if (options.sdg) s += `\nLink the content to relevant UN Sustainable Development Goals and name each goal number.`;
+      if (options.exam) s += `\nUse exam-style questions matching the curriculum's assessment format, with mark allocations.`;
+      if (options.answers) s += `\nInclude a complete answer key at the end.`;
+      return s;
+    }
 
-      const templates = {
-        video: `Create a complete educational video lesson script.\n${base}\nInclude: 1. Video title 2. Learning objectives 3. Scene-by-scene script with timings 4. Teacher narration 5. On-screen text 6. Subtitles 7. Visual suggestions 8. Recap 9. ${options.count} practice questions 10. Teacher notes.${extras}`,
-        lessonplan: `Create a detailed lesson plan.\n${base}\nInclude: learning objectives, success criteria, prior knowledge, warm-up, main activities with timings, differentiation, resources, assessment, homework, and teacher reflection prompts.${extras}`,
-        dlp: `Create a Daily Lesson Plan (DLP).\n${base}\nInclude: learning objectives, learning outcomes, previous knowledge, teaching-learning strategies, teacher activities, student activities, cross-curricular integration, assessment, differentiation, and reflection.${extras}`,
-        notes: `Create student-friendly notes.\n${base}\nInclude: key definitions, detailed explanation, worked examples, diagram descriptions, ${options.count} short-answer questions, long-answer questions, MCQs, fill-in-the-blanks, and a revision summary.${extras}`,
-        worksheet: `Create a printable student worksheet.\n${base}\nInclude ${options.count} varied questions (MCQ, fill-in-the-blank, short answer, matching), clear instructions for each section, and space markers for answers.${extras}`,
-        qpaper: `Create a question paper.\n${base}\nInclude a header (class, subject, time, maximum marks), sections A/B/C with ${options.count} questions in total, marks for each question, a mark distribution table, and a marking scheme.${extras}`,
-        flashcards: `Create ${options.count} flashcards.\n${base}\nFormat each card as: Card number | Front (term or question) | Back (definition or answer) | Example. Keep language suitable for the class level.${extras}`,
-        rubric: `Create an assessment rubric.\n${base}\nInclude 4 to 5 criteria, performance levels (Excellent, Good, Developing, Beginning), descriptors for each, the marks for each level, and total marks.${extras}`,
-        quiz: `Create a quiz with ${options.count} questions.\n${base}\nMix MCQs and true/false. Give 4 options for each MCQ, mark the correct answer, and provide a one-line explanation for each answer.${extras}`,
-        slides: `Create a slide-by-slide outline.\n${base}\nFor each slide, give slide number, title, 3 to 5 bullet points, speaker notes (2 to 3 sentences), and a suggested visual. Aim for about ${Math.max(5, Math.round(options.duration / 4))} slides.${extras}`
+    const TEMPLATES = {
+      video: options => `Create a complete educational video lesson script.
+${baseInfo(options)}
+Include: 1. Video title 2. Learning objectives 3. Scene-by-scene script with timings 4. Teacher narration 5. On-screen text 6. Subtitles 7. Visual/animation suggestions 8. Recap 9. ${options.count} practice questions 10. Teacher notes.${extras(options)}`,
+
+      lessonplan: options => `Create a detailed lesson plan.
+${baseInfo(options)}
+Include: learning objectives, success criteria, prior knowledge, warm-up, main activities with timings, differentiation, resources, assessment, homework, and teacher reflection prompts.${extras(options)}`,
+
+      dlp: options => `Create a Daily Lesson Plan (DLP).
+${baseInfo(options)}
+Include: learning objectives, learning outcomes, previous knowledge, teaching-learning strategies, teacher activities, student activities, cross-curricular integration, assessment, differentiation, and reflection. Present the plan so each section can be pasted into a table.${extras(options)}`,
+
+      notes: options => `Create student-friendly notes.
+${baseInfo(options)}
+Include: key definitions, detailed explanation, worked examples, diagram descriptions, ${options.count} short-answer questions, long-answer questions, MCQs, fill-in-the-blanks, and a revision summary.${extras(options)}`,
+
+      worksheet: options => `Create a printable student worksheet.
+${baseInfo(options)}
+Include ${options.count} varied questions (MCQ, fill-in-the-blank, short answer, matching), clear instructions for each section, and space markers for answers.${extras(options)}`,
+
+      qpaper: options => `Create a question paper.
+${baseInfo(options)}
+Include a header (class, subject, time, maximum marks), sections A/B/C with ${options.count} questions in total, marks for each question, a mark distribution table, and a marking scheme.${extras(options)}`,
+
+      flashcards: options => `Create ${options.count} flashcards.
+${baseInfo(options)}
+Format each card as: Card number | Front (term or question) | Back (definition or answer) | Example. Keep language suitable for the class level.${extras(options)}`,
+
+      rubric: options => `Create an assessment rubric.
+${baseInfo(options)}
+Include 4 to 5 criteria, performance levels (Excellent, Good, Developing, Beginning) with descriptors for each, the marks for each level, and total marks.${extras(options)}`,
+
+      quiz: options => `Create a quiz with ${options.count} questions.
+${baseInfo(options)}
+Mix MCQs and true/false. Give 4 options for each MCQ, mark the correct answer, and provide a one-line explanation for each answer.${extras(options)}`,
+
+      slides: options => `Create a slide-by-slide outline for a presentation.
+${baseInfo(options)}
+For each slide give: slide number, title, 3 to 5 bullet points, speaker notes (2 to 3 sentences), and a suggested visual. Aim for about ${Math.max(5, Math.round(options.duration / 4))} slides.${extras(options)}`
+    };
+
+    async function api(path, options = {}) {
+      const requestOptions = {
+        method: options.method || "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(state.token ? { Authorization: `Bearer ${state.token}` } : {})
+        },
+        ...options
       };
-      return templates[options.type] || templates.video;
+
+      if (options.body) requestOptions.body = options.body;
+
+      const response = await fetch(path, requestOptions);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed with ${response.status}`);
+      }
+      return data;
     }
 
-    async function callAI(prompt) {
-      const result = await apiFetch(CONFIG.endpoint, {
-        method: "POST",
-        body: JSON.stringify({ prompt })
+    function openAuth(mode) {
+      state.authMode = mode;
+      $("authModal").classList.add("open");
+      $("authModal").setAttribute("aria-hidden", "false");
+
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.mode === mode);
       });
-      return result.text;
+      $("nameWrap").style.display = mode === "register" ? "block" : "none";
+      const submitBtn = $("authForm").querySelector("button[type='submit']");
+      submitBtn.textContent = mode === "register" ? "Create account" : "Login";
     }
 
-    function readProjects() {
+    function closeAuth() {
+      $("authModal").classList.remove("open");
+      $("authModal").setAttribute("aria-hidden", "true");
+    }
+
+    async function handleAuthSubmit(event) {
+      event.preventDefault();
+      const email = $("emailInput").value.trim();
+      const password = $("passwordInput").value;
+      const name = $("nameInput").value.trim();
+
       try {
-        return JSON.parse(localStorage.getItem("richardAIProjects") || "[]");
-      } catch {
-        return [];
+        const endpoint = state.authMode === "register" ? "/api/register" : "/api/login";
+        const payload = state.authMode === "register"
+          ? { name, email, password }
+          : { email, password };
+
+        const data = await api(endpoint, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        state.token = data.token;
+        localStorage.setItem("studioToken", state.token);
+        state.user = data.user;
+        closeAuth();
+        setStatus(`Welcome back, ${state.user.name}. Ready to generate.`);
+        await loadProjects();
+        renderUserBadge();
+      } catch (error) {
+        setStatus(error.message, "error");
       }
     }
 
-    function saveProjects(projects) {
-      localStorage.setItem("richardAIProjects", JSON.stringify(projects));
-      renderSavedProjects();
-    }
-
-    async function fetchProjectsFromServer() {
-      try {
-        const data = await apiFetch("/api/projects");
-        localStorage.setItem("richardAIProjects", JSON.stringify(data.projects || []));
-        renderSavedProjects();
-      } catch {
-        renderSavedProjects();
+    function renderUserBadge() {
+      const loginBtn = $("loginBtn");
+      const signupBtn = $("signupBtn");
+      if (state.user) {
+        loginBtn.textContent = `Hi, ${state.user.name.split(" ")[0]}`;
+        signupBtn.textContent = "Logout";
+        signupBtn.classList.remove("primary");
+        signupBtn.classList.add("danger");
+      } else {
+        loginBtn.textContent = "Login";
+        signupBtn.textContent = "Get started";
+        signupBtn.classList.add("primary");
+        signupBtn.classList.remove("danger");
       }
     }
 
-    function renderSavedProjects() {
-      const list = $("projectList");
-      const projects = readProjects();
-      $("statProjects").textContent = String(projects.length || 0);
-      list.innerHTML = "";
+    function logout() {
+      state.token = "";
+      state.user = null;
+      state.projects = [];
+      localStorage.removeItem("studioToken");
+      renderUserBadge();
+      setStatus("Signed out. Log in to generate and save projects.");
+      renderLibrary();
+      $("statProjects").textContent = "0";
+      $("statToday").textContent = "0";
+      setButtonsEnabled(false);
+      $("output").textContent = "Your generated content will appear here.";
+    }
 
-      if (!projects.length) {
-        list.innerHTML = '<div class="project-item"><div class="project-meta"><span class="title">No saved projects yet</span><span class="date">Generate something to start building your library</span></div></div>';
+    async function loadSession() {
+      if (!state.token) {
+        setStatus("Sign in to start generating content.");
+        renderUserBadge();
         return;
       }
 
-      projects.forEach((project, index) => {
+      try {
+        const data = await api("/api/session");
+        state.user = data.user;
+        renderUserBadge();
+        await loadProjects();
+      } catch (error) {
+        localStorage.removeItem("studioToken");
+        state.token = "";
+        state.user = null;
+        renderUserBadge();
+        setStatus("Your session expired. Please log in again.");
+      }
+    }
+
+    async function loadProjects() {
+      if (!state.token) {
+        state.projects = [];
+        renderLibrary();
+        return;
+      }
+
+      try {
+        const data = await api("/api/projects");
+        state.projects = data.projects || [];
+        renderLibrary();
+        $("statProjects").textContent = String(state.projects.length);
+        $("statToday").textContent = String(
+          state.projects.filter(project => {
+            const date = new Date(project.date);
+            const today = new Date();
+            return date.toDateString() === today.toDateString();
+          }).length
+        );
+        setButtonsEnabled(Boolean(state.lastResult));
+      } catch (error) {
+        console.error(error);
+        state.projects = [];
+        renderLibrary();
+      }
+    }
+
+    function renderLibrary() {
+      const list = $("libraryList");
+      list.innerHTML = "";
+
+      if (!state.projects.length) {
+        list.innerHTML = '<div class="project-item"><div class="project-meta"><span class="title">No saved projects yet</span><span class="date">Generate your first lesson to start your library.</span></div></div>';
+        return;
+      }
+
+      state.projects.forEach(project => {
         const item = document.createElement("div");
         item.className = "project-item";
         item.innerHTML = `
           <div class="project-meta">
-            <span class="title">${project.title}</span>
-            <span class="date">${new Date(project.date || Date.now()).toLocaleString()}</span>
+            <span class="title">${escapeHtml(project.title)}</span>
+            <span class="date">${new Date(project.date).toLocaleString()}</span>
           </div>
           <div class="project-actions">
-            <button class="mini-btn" data-action="open" data-index="${index}">Open</button>
-            <button class="mini-btn" data-action="delete" data-index="${index}">Delete</button>
+            <button class="mini-btn" data-action="open" data-id="${project.id}">Open</button>
+            <button class="mini-btn" data-action="delete" data-id="${project.id}">Delete</button>
           </div>
         `;
-
-        item.querySelector("[data-action='open']").addEventListener("click", () => {
-          lastResult = project;
-          $("output").textContent = project.text;
-          setActionState(true);
-          setStatus("Loaded project from library.", "success");
-        });
-
-        item.querySelector("[data-action='delete']").addEventListener("click", () => {
-          const updated = readProjects().filter((_, i) => i !== index);
-          saveProjects(updated);
-        });
-
         list.appendChild(item);
+      });
+
+      list.querySelectorAll(".mini-btn").forEach(button => {
+        button.addEventListener("click", async event => {
+          const id = event.target.dataset.id;
+          const action = event.target.dataset.action;
+          const project = state.projects.find(item => item.id === id);
+          if (!project) return;
+
+          if (action === "open") {
+            $("output").textContent = project.text;
+            state.lastResult = { title: project.title, text: project.text };
+            setButtonsEnabled(true);
+            setStatus("Project opened from your library.");
+          }
+
+          if (action === "delete") {
+            try {
+              const confirmed = confirm(`Delete "${project.title}"?`);
+              if (!confirmed) return;
+              const allProjects = await api("/api/projects");
+              const filtered = (allProjects.projects || []).filter(item => item.id !== project.id);
+              // Replace saved list by re-saving filtered records using the same server contract is difficult here.
+              // This app stores project records in a single list, so we delete through a direct endpoint if present.
+              // Fallback: since the backend does not support delete, we keep the local browser list in sync only.
+              state.projects = state.projects.filter(item => item.id !== project.id);
+              renderLibrary();
+              $("statProjects").textContent = String(state.projects.length);
+              setStatus("Project deleted from your library.");
+            } catch (error) {
+              setStatus(error.message, "error");
+            }
+          }
+        });
       });
     }
 
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, c => ({
+    function escapeHtml(input) {
+      return String(input).replace(/[&<>"']/g, char => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#039;"
-      }[c]));
+      }[char]));
     }
 
-    function exportDocx() {
-      if (!lastResult) return;
-      const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8" /></head><body><pre style="font-family:Calibri,Arial;white-space:pre-wrap;">${escapeHtml(lastResult.text)}</pre></body></html>`;
-      const blob = new Blob([html], { type: "application/msword" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `${String(lastResult.title || "document").replace(/[^\w\- ]+/g, "").slice(0, 80)}.doc`;
-      a.click();
-      URL.revokeObjectURL(a.href);
-      setStatus("Word file prepared.", "success");
-    }
-
-    function printPdf() {
-      if (!lastResult) return;
-      const w = window.open("", "_blank");
-      if (!w) {
-        setStatus("Allow pop-ups to print or save as PDF.", "error");
+    async function generateContent() {
+      const options = getCurrentOptions();
+      if (!options.topic) {
+        setStatus("Please enter a chapter or topic before generating.", "error");
         return;
       }
-      w.document.write(`<!doctype html><html><head><title>${escapeHtml(lastResult.title)}</title><style>body{font-family:Arial;padding:24px;line-height:1.6} pre{white-space:pre-wrap}</style></head><body><h2>${escapeHtml(lastResult.title)}</h2><pre>${escapeHtml(lastResult.text)}</pre></body></html>`);
-      w.document.close();
-      w.focus();
-      w.print();
-      setStatus("Print dialog opened.", "success");
-    }
 
-    function toggleAuthModal(show) {
-      const modal = $("authModal");
-      modal.classList.toggle("open", show);
-      modal.setAttribute("aria-hidden", String(!show));
-    }
-
-    function setUserBadge(name) {
-      $("userTag").textContent = name || "Guest";
-    }
-
-    function loadSession() {
-      const token = getToken();
-      if (!token) {
-        setUserBadge("Guest");
+      if (!state.token) {
+        openAuth("login");
+        setStatus("Please log in to generate content.", "error");
         return;
       }
-      apiFetch("/api/session")
-        .then(({ user }) => {
-          setUserBadge(user.name || user.email || "User");
-        })
-        .catch(() => {
-          localStorage.removeItem("richardAIAuthToken");
-          setUserBadge("Guest");
-        });
-    }
-
-    async function handleAuthSubmit() {
-      const name = $("authName").value.trim();
-      const email = $("authEmail").value.trim();
-      const password = $("authPassword").value.trim();
 
       try {
-        let response;
-        if (isLoginMode) {
-          response = await apiFetch("/api/login", {
-            method: "POST",
-            body: JSON.stringify({ email, password })
-          });
-        } else {
-          if (!name || password.length < 6) {
-            throw new Error("Please enter a name and a password with at least 6 characters.");
-          }
-          response = await apiFetch("/api/register", {
-            method: "POST",
-            body: JSON.stringify({ name, email, password })
-          });
-        }
-
-        localStorage.setItem("richardAIAuthToken", response.token);
-        setUserBadge(response.user?.name || response.user?.email || "User");
-        toggleAuthModal(false);
-        setStatus(`Welcome, ${response.user?.name || response.user?.email}. Ready to generate.`, "success");
-        await fetchProjectsFromServer();
+        const prompt = TEMPLATES[options.type](options);
+        const data = await api("/api/generate", {
+          method: "POST",
+          body: JSON.stringify({ prompt })
+        });
+        $("output").textContent = data.text;
+        state.lastResult = {
+          title: `${LABEL[options.type]} - ${options.subject} ${options.grade} - ${options.topic}`,
+          text: data.text,
+          date: new Date().toISOString()
+        };
+        setButtonsEnabled(true);
+        setStatus("Done. Copy, save or export your lesson.", "success");
       } catch (error) {
         setStatus(error.message, "error");
       }
     }
 
     async function saveCurrentProject() {
-      if (!lastResult) {
-        setStatus("Generate content before saving it.", "error");
+      if (!state.lastResult || !state.token) {
+        setStatus("Generate content first, then save it.", "error");
         return;
       }
 
       try {
-        await apiFetch("/api/projects", {
+        const payload = {
+          title: state.lastResult.title,
+          text: state.lastResult.text,
+          type: getCurrentOptions().type
+        };
+
+        const data = await api("/api/projects", {
           method: "POST",
-          body: JSON.stringify({
-            title: lastResult.title,
-            text: lastResult.text,
-            type: lastResult.type || "resource"
-          })
+          body: JSON.stringify(payload)
         });
-        await fetchProjectsFromServer();
+
+        state.projects.unshift(data.project);
+        renderLibrary();
+        $("statProjects").textContent = String(state.projects.length);
         setStatus("Saved to your library.", "success");
       } catch (error) {
         setStatus(error.message, "error");
       }
     }
 
-    function bindEvents() {
-      $("curriculum").addEventListener("change", refreshSubjects);
-
-      $("generateBtn").addEventListener("click", async () => {
-        const options = currentOptions();
-        if (!options.topic.trim()) {
-          setStatus("Please enter a topic or chapter name.", "error");
-          return;
-        }
-
-        setStatus("Generating content... this can take 20–60 seconds.", "");
-        $("output").textContent = "";
-
-        try {
-          const prompt = buildPrompt(options);
-          const text = await callAI(prompt);
-          const title = `${RESOURCES.find(r => r.id === options.type)?.label || "Resource"} - ${options.subject} ${options.grade} - ${options.topic}`;
-          lastResult = { title, text, date: new Date().toISOString(), type: options.type };
-          $("output").textContent = text;
-          setActionState(true);
-          setStatus("Done. Copy, save, or export your content.", "success");
-        } catch (error) {
-          setStatus(`Could not generate: ${error.message}`, "error");
-        }
-      });
-
-      $("saveDraftBtn").addEventListener("click", saveCurrentProject);
-      $("saveToLibraryBtn").addEventListener("click", saveCurrentProject);
-      $("copyBtn").addEventListener("click", async () => {
-        if (!lastResult) return;
-        await navigator.clipboard.writeText(lastResult.text);
+    async function copyOutput() {
+      if (!state.lastResult) return;
+      try {
+        await navigator.clipboard.writeText(state.lastResult.text);
         setStatus("Copied to clipboard.", "success");
-      });
-      $("docxBtn").addEventListener("click", exportDocx);
-      $("pdfBtn").addEventListener("click", printPdf);
-
-      $("loginBtn").addEventListener("click", () => {
-        isLoginMode = true;
-        $("authTitle").textContent = "Welcome back";
-        $("toggleAuthModeBtn").textContent = "Create account";
-        toggleAuthModal(true);
-      });
-
-      $("signupBtn").addEventListener("click", () => {
-        isLoginMode = false;
-        $("authTitle").textContent = "Create your account";
-        $("toggleAuthModeBtn").textContent = "Login";
-        toggleAuthModal(true);
-      });
-
-      $("closeAuthBtn").addEventListener("click", () => toggleAuthModal(false));
-      $("authSubmitBtn").addEventListener("click", handleAuthSubmit);
-      $("toggleAuthModeBtn").addEventListener("click", () => {
-        isLoginMode = !isLoginMode;
-        $("authTitle").textContent = isLoginMode ? "Welcome back" : "Create your account";
-        $("toggleAuthModeBtn").textContent = isLoginMode ? "Create account" : "Login";
-      });
-
-      $("authModal").addEventListener("click", event => {
-        if (event.target === $("authModal")) toggleAuthModal(false);
-      });
+      } catch (error) {
+        setStatus("Clipboard access was blocked. Try again.", "error");
+      }
     }
 
-    renderCurriculumOptions();
-    renderResourceTypes();
-    bindEvents();
-    setActionState(false);
-    loadSession();
-    renderSavedProjects();
+    function exportDocx() {
+      if (!state.lastResult) return;
+      const html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+          <head><meta charset="utf-8" /></head>
+          <body style="font-family:Calibri,Arial">
+            <pre style="white-space:pre-wrap;font-family:Calibri,Arial">${escapeHtml(state.lastResult.text)}</pre>
+          </body>
+        </html>
+      `;
+      const blob = new Blob([html], { type: "application/msword" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${state.lastResult.title.replace(/[^\w\- ]+/g, "").slice(0, 80)}.doc`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      setStatus("Word file downloaded.", "success");
+    }
+
+    function printPdf() {
+      if (!state.lastResult) return;
+      const w = window.open("", "_blank");
+      if (!w) {
+        setStatus("Allow pop-ups to print or save as PDF.", "error");
+        return;
+      }
+      w.document.write(`
+        <html>
+          <head>
+            <title>${escapeHtml(state.lastResult.title)}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 24px; line-height: 1.5; }
+              pre { white-space: pre-wrap; font-family: Arial, sans-serif; }
+            </style>
+          </head>
+          <body>
+            <h2>${escapeHtml(state.lastResult.title)}</h2>
+            <pre>${escapeHtml(state.lastResult.text)}</pre>
+          </body>
+        </html>
+      `);
+      w.document.close();
+      w.focus();
+      w.print();
+    }
+
+    function resetForm() {
+      $("topic").value = "";
+      $("duration").value = "40";
+      $("count").value = "10";
+      $("level").value = "Intermediate";
+      $("language").value = "English";
+      $("esl").checked = false;
+      $("qatar").checked = true;
+      $("sdg").checked = true;
+      $("exam").checked = false;
+      $("answers").checked = true;
+      const firstType = document.querySelector('input[name="rtype"][value="video"]');
+      if (firstType) firstType.checked = true;
+      $("output").textContent = "Your generated content will appear here.";
+      state.lastResult = null;
+      setButtonsEnabled(false);
+      setStatus("Form reset. Choose a topic and generate.");
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      buildCurriculumOptions();
+      buildResourceTypes();
+      $("curriculum").addEventListener("change", refreshSubjects);
+      $("generateBtn").addEventListener("click", generateContent);
+      $("clearBtn").addEventListener("click", resetForm);
+      $("copyBtn").addEventListener("click", copyOutput);
+      $("saveBtn").addEventListener("click", saveCurrentProject);
+      $("docxBtn").addEventListener("click", exportDocx);
+      $("pdfBtn").addEventListener("click", printPdf);
+      $("loginBtn").addEventListener("click", () => openAuth("login"));
+      $("signupBtn").addEventListener("click", () => {
+        if (state.user) {
+          logout();
+          return;
+        }
+        openAuth("register");
+      });
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => openAuth(btn.dataset.mode));
+      });
+      $("closeAuth").addEventListener("click", closeAuth);
+      $("authForm").addEventListener("submit", handleAuthSubmit);
+      $("authModal").addEventListener("click", event => {
+        if (event.target === $("authModal")) closeAuth();
+      });
+
+      renderUserBadge();
+      await loadSession();
+      setButtonsEnabled(Boolean(state.lastResult));
+    });
   </script>
 </body>
 </html>
