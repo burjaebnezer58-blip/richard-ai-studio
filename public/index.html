@@ -6,219 +6,183 @@
   <title>Richard AI Studio Pro</title>
   <style>
     :root {
-      --bg: #f4f7ff;
-      --bg-2: #ebf0ff;
-      --panel: rgba(255,255,255,0.8);
-      --panel-strong: #ffffff;
-      --primary: #5b4df3;
-      --primary-2: #7b68ff;
-      --accent: #00c2a8;
-      --text: #171d2d;
-      --muted: #5f6881;
-      --line: #dfe6f5;
-      --danger: #d74a4a;
-      --success: #129a6c;
-      --shadow: 0 20px 50px rgba(48, 58, 110, 0.12);
+      --bg: #f5f7ff;
+      --bg-soft: #edf2ff;
+      --panel: rgba(255,255,255,0.82);
+      --primary: #5d4af8;
+      --primary-2: #7d69ff;
+      --accent: #17c7a2;
+      --text: #1b2138;
+      --muted: #5b647d;
+      --line: #dde5f6;
+      --danger: #d14d4d;
+      --success: #0d9a72;
+      --shadow: 0 18px 50px rgba(36,45,85,0.12);
       --radius: 20px;
     }
 
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; font-family: Inter, "Segoe UI", sans-serif; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); color: var(--text); }
+    html, body { margin: 0; min-height: 100%; font-family: Inter, "Segoe UI", sans-serif; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%); color: var(--text); }
     body { min-height: 100vh; }
     button, input, select, textarea { font: inherit; }
 
-    .app-shell { max-width: 1440px; margin: 0 auto; padding: 24px; }
+    .container { max-width: 1440px; margin: 0 auto; padding: 24px; }
 
     .topbar {
+      position: sticky; top: 12px; z-index: 10;
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(255,255,255,0.72); backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.5); border-radius: 18px;
-      padding: 16px 20px; box-shadow: var(--shadow); position: sticky; top: 12px; z-index: 10;
+      background: rgba(255,255,255,0.72); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.65); border-radius: 18px;
+      box-shadow: var(--shadow); padding: 16px 20px;
     }
-
-    .brand-block { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .brand-mark {
-      width: 38px; height: 38px; border-radius: 12px;
+      width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      color: white; display: grid; place-items: center; font-weight: 700;
-      box-shadow: 0 12px 30px rgba(91, 77, 243, 0.35);
+      color: white; font-weight: 700; box-shadow: 0 12px 26px rgba(93, 74, 248, 0.22);
     }
-    .brand-copy strong { display: block; font-size: 1rem; }
-    .brand-copy span { color: var(--muted); font-size: 0.75rem; }
+    .brand strong { display: block; }
+    .brand span { color: var(--muted); font-size: 0.73rem; }
 
-    .main-nav { display: flex; align-items: center; gap: 18px; color: var(--muted); }
-    .main-nav a { text-decoration: none; color: inherit; font-weight: 600; }
+    .nav { display: flex; gap: 18px; align-items: center; color: var(--muted); font-weight: 600; }
+    .nav a { text-decoration: none; color: inherit; }
 
-    .auth-actions { display: flex; align-items: center; gap: 10px; }
     .btn {
-      border: 1px solid var(--line); background: white; color: var(--text); border-radius: 12px;
-      padding: 10px 16px; font-weight: 700; cursor: pointer; transition: 0.2s ease;
+      appearance: none; border: 1px solid var(--line); background: white; color: var(--text);
+      border-radius: 12px; padding: 10px 16px; font-weight: 700; cursor: pointer; transition: 0.2s ease;
     }
     .btn:hover { transform: translateY(-1px); }
     .btn.primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      border-color: transparent; color: white; box-shadow: 0 12px 25px rgba(91, 77, 243, 0.25);
+      border-color: transparent; background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white; box-shadow: 0 14px 26px rgba(93, 74, 248, 0.24);
     }
     .btn.ghost { background: transparent; }
 
     .dashboard {
-      display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; margin-top: 28px;
+      margin-top: 28px; display: grid; grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
+      gap: 24px;
     }
 
     .panel {
-      background: var(--panel); border: 1px solid rgba(255,255,255,0.7);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 20px;
+      background: var(--panel); border: 1px solid rgba(255,255,255,0.7); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 20px;
     }
 
-    .panel-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 18px;
+    .panel-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;
     }
-    .panel-header h2 { margin: 0; font-size: 1.08rem; }
+    .panel-head h2 { margin: 0; font-size: 1.08rem; }
     .tag {
-      background: rgba(91, 77, 243, 0.1); color: var(--primary); border-radius: 999px;
-      padding: 6px 10px; font-size: 0.74rem; font-weight: 700;
+      background: rgba(93, 74, 248, 0.1); color: var(--primary); border-radius: 999px;
+      padding: 6px 10px; font-size: 0.72rem; font-weight: 700;
     }
 
     .field { margin-bottom: 14px; }
-    .field label {
-      display: block; margin-bottom: 8px; font-size: 0.82rem; font-weight: 700; color: var(--muted);
-    }
+    .field label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 0.8rem; font-weight: 700; }
     .field input, .field select, .field textarea {
-      width: 100%; background: rgba(255,255,255,0.7); border: 1px solid var(--line);
-      border-radius: 12px; padding: 11px 12px; color: var(--text);
-      outline: none; transition: 0.2s ease;
+      width: 100%; background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 12px;
+      padding: 11px 12px; color: var(--text); outline: none; transition: 0.2s ease;
     }
     .field input:focus, .field select:focus, .field textarea:focus {
-      border-color: rgba(91,77,243,0.6); box-shadow: 0 0 0 4px rgba(91,77,243,0.08);
+      border-color: rgba(93,74,248,0.6); box-shadow: 0 0 0 4px rgba(93,74,248,0.08);
     }
 
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-    .type-grid {
-      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px;
+    .type-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .type-item { position: relative; }
+    .type-item input { position: absolute; opacity: 0; pointer-events: none; }
+    .type-item label {
+      display: flex; justify-content: center; align-items: center; min-height: 60px; text-align: center;
+      border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,0.7);
+      font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: 0.2s ease; margin: 0; padding: 12px;
     }
-    .type-option {
-      position: relative;
-    }
-    .type-option input { position: absolute; opacity: 0; pointer-events: none; }
-    .type-option label {
-      display: flex; align-items: center; justify-content: center; min-height: 62px;
-      padding: 12px; border-radius: 14px; border: 1px solid var(--line);
-      background: rgba(255,255,255,0.7); text-align: center; font-size: 0.83rem; font-weight: 700;
-      cursor: pointer; transition: 0.2s ease; margin: 0;
-    }
-    .type-option input:checked + label {
-      background: rgba(91,77,243,0.08); border-color: rgba(91,77,243,0.55); color: var(--primary);
-      box-shadow: inset 0 0 0 1px rgba(91,77,243,0.15);
+    .type-item input:checked + label {
+      background: rgba(93,74,248,0.08); border-color: rgba(93,74,248,0.5); color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(93,74,248,0.12);
     }
 
-    .check-list { display: grid; gap: 10px; margin-top: 10px; }
+    .check-list { display: grid; gap: 10px; }
     .check-item {
       display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.9rem;
     }
     .check-item input { accent-color: var(--primary); }
 
-    .cta-row {
-      display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;
-    }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
 
-    .content-panel { padding-bottom: 14px; }
     .stats-row {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;
-      margin-bottom: 18px;
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px;
     }
     .stat-card {
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(242,246,255,1));
-      border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
+      padding: 14px 16px; background: linear-gradient(180deg, rgba(255,255,255,1), rgba(237,242,255,0.9));
+      border: 1px solid var(--line); border-radius: 16px;
     }
     .stat-card small { display: block; color: var(--muted); margin-bottom: 8px; }
-    .stat-card strong { font-size: 1.6rem; }
+    .stat-card strong { font-size: 1.5rem; }
 
     .status-bar {
-      min-height: 26px; margin: 10px 0 18px; color: var(--muted); font-size: 0.88rem; font-weight: 600;
+      min-height: 26px; margin: 6px 0 18px; color: var(--muted); font-weight: 600; font-size: 0.88rem;
     }
     .status-bar.error { color: var(--danger); }
     .status-bar.success { color: var(--success); }
 
     .output-box {
-      background: #101827; color: #ecf4ff; border-radius: 18px; padding: 18px 20px;
-      min-height: 260px; line-height: 1.7; white-space: pre-wrap; word-break: break-word;
-      font-size: 0.96rem; box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+      min-height: 290px; background:#0e1729; color:#edf4ff; border-radius: 18px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      padding: 18px 20px; white-space: pre-wrap; line-height: 1.7; font-size: 0.96rem; word-break: break-word;
     }
 
-    .tool-actions {
-      display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0 22px;
-    }
-    .tool-actions .btn { background: rgba(255,255,255,0.8); }
-    .tool-actions .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 18px 0 24px; }
+    .actions .btn { background: rgba(255,255,255,0.75); }
+    .actions .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    .library-box {
-      border-top: 1px solid var(--line); padding-top: 18px; margin-top: 8px;
-    }
-    .library-grid {
-      display: grid; gap: 12px; margin-top: 16px;
-    }
+    .library-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .library-grid { display: grid; gap: 12px; }
     .project-item {
-      background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 14px;
-      padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px;
     }
     .project-meta { min-width: 0; }
-    .project-meta .title { font-weight: 700; display: block; }
-    .project-meta .date { color: var(--muted); font-size: 0.76rem; }
+    .project-meta .title { display: block; font-weight: 700; }
+    .project-meta .date { display: block; color: var(--muted); font-size: 0.75rem; margin-top: 4px; }
     .project-actions { display: flex; gap: 8px; }
     .mini-btn {
-      border: 1px solid var(--line); background: white; border-radius: 10px;
-      padding: 8px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+      border: 1px solid var(--line); background: white; border-radius: 10px; padding: 8px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
     }
 
     .modal {
-      position: fixed; inset: 0; background: rgba(16,24,39,0.45); display: flex; align-items: center; justify-content: center;
-      padding: 20px; z-index: 30; opacity: 0; pointer-events: none; transition: 0.2s ease;
+      position: fixed; inset: 0; background: rgba(11,16,28,0.46); display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: 0.2s ease; z-index: 20;
     }
     .modal.open { opacity: 1; pointer-events: auto; }
     .modal-card {
       width: min(460px, 100%); background: white; border-radius: 22px; padding: 22px; box-shadow: var(--shadow);
     }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-    .close-btn {
-      border: 0; background: transparent; color: var(--muted); font-size: 1.5rem; cursor: pointer;
-    }
-    .hidden { display: none !important; }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .close-btn { border: 0; background: transparent; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
 
-    @media (max-width: 980px) {
-      .dashboard { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 640px) {
-      .app-shell { padding: 14px; }
-      .topbar { flex-wrap: wrap; gap: 12px; }
-      .main-nav { order: 3; width: 100%; justify-content: space-between; }
-      .two-col, .type-grid, .stats-row { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 980px){ .dashboard { grid-template-columns: 1fr; } .stats-row { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 640px){ .container { padding: 14px; } .topbar { flex-wrap: wrap; gap: 12px; } .nav { order: 3; width: 100%; justify-content: space-between; } .two-col, .type-grid, .stats-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <div class="app-shell">
+  <div class="container">
     <header class="topbar">
-      <div class="brand-block">
+      <div class="brand">
         <div class="brand-mark">R</div>
-        <div class="brand-copy">
+        <div>
           <strong>Richard AI Studio</strong>
           <span>Premium teaching content engine</span>
         </div>
       </div>
 
-      <nav class="main-nav">
+      <nav class="nav">
         <a href="#">Generate</a>
+        <a href="#">Projects</a>
         <a href="#">Library</a>
         <a href="#">Plans</a>
-        <a href="#">Resources</a>
       </nav>
 
-      <div class="auth-actions">
+      <div class="cta-row" style="margin: 0;">
         <button class="btn ghost" id="loginBtn">Login</button>
         <button class="btn primary" id="signupBtn">Get started</button>
       </div>
@@ -226,8 +190,8 @@
 
     <main class="dashboard">
       <aside class="panel">
-        <div class="panel-header">
-          <h2>Create a new resource</h2>
+        <div class="panel-head">
+          <h2>Create a lesson</h2>
           <span class="tag">Pro</span>
         </div>
 
@@ -259,7 +223,7 @@
 
         <div class="two-col">
           <div class="field">
-            <label for="duration">Duration</label>
+            <label for="duration">Duration (mins)</label>
             <input id="duration" type="number" value="40" min="5" max="180" />
           </div>
           <div class="field">
@@ -304,11 +268,11 @@
 
         <div class="cta-row">
           <button class="btn primary" id="generateBtn">Generate now</button>
-          <button class="btn ghost" id="saveProjectBtn">Save draft</button>
+          <button class="btn ghost" id="saveDraftBtn">Save draft</button>
         </div>
       </aside>
 
-      <section class="panel content-panel">
+      <section class="panel">
         <div class="stats-row">
           <div class="stat-card">
             <small>Projects</small>
@@ -332,33 +296,31 @@
 
         <div id="output" class="output-box">Your generated content will appear here.</div>
 
-        <div class="tool-actions">
+        <div class="actions">
           <button class="btn" id="copyBtn" disabled>Copy</button>
           <button class="btn" id="saveToLibraryBtn" disabled>Save to Library</button>
           <button class="btn" id="docxBtn" disabled>Download DOCX</button>
           <button class="btn" id="pdfBtn" disabled>Print / PDF</button>
         </div>
 
-        <div class="library-box">
-          <div class="panel-header" style="margin-bottom: 0;">
-            <h2>My library</h2>
-            <span class="tag" id="userTag">Guest</span>
-          </div>
-          <div class="library-grid" id="projectList"></div>
+        <div class="library-head">
+          <h2 style="margin:0;">My library</h2>
+          <span class="tag" id="userTag">Guest</span>
         </div>
+        <div class="library-grid" id="projectList"></div>
       </section>
     </main>
   </div>
 
   <div id="authModal" class="modal" aria-hidden="true">
     <div class="modal-card">
-      <div class="modal-header">
+      <div class="modal-head">
         <h2 id="authTitle">Welcome back</h2>
-        <button class="close-btn" id="closeAuthBtn" aria-label="Close">×</button>
+        <button id="closeAuthBtn" class="close-btn" aria-label="Close">×</button>
       </div>
 
       <div class="field">
-        <label for="authName">Full name</label>
+        <label for="authName">Name</label>
         <input id="authName" type="text" placeholder="Teacher name" />
       </div>
 
@@ -372,7 +334,7 @@
         <input id="authPassword" type="password" placeholder="••••••••" />
       </div>
 
-      <div class="cta-row" style="margin-top: 10px;">
+      <div class="cta-row" style="margin-top: 8px;">
         <button class="btn primary" id="authSubmitBtn">Continue</button>
         <button class="btn ghost" id="toggleAuthModeBtn">Create account</button>
       </div>
@@ -380,10 +342,7 @@
   </div>
 
   <script>
-    const CONFIG = {
-      endpoint: "/api/generate"
-    };
-
+    const CONFIG = { endpoint: "/api/generate" };
     const CURRICULA = {
       "CBSE (India)": { subjects: ["English","Hindi","Mathematics","Science","Social Science","Computer Science","Sanskrit","Physical Education","Art Education","Other"] },
       "ICSE / CISCE (India)": { subjects: ["English Language","English Literature","Hindi","Mathematics","Physics","Chemistry","Biology","History & Civics","Geography","Computer Applications","Other"] },
@@ -410,63 +369,72 @@
 
     const ESL_FOCUS = ["Phonics", "Grammar", "Vocabulary", "Speaking", "Listening", "Reading comprehension", "Writing"];
     const $ = id => document.getElementById(id);
-
-    const curSel = $("curriculum");
-    const gradeSel = $("grade");
-    const subSel = $("subject");
-    const authModal = $("authModal");
-    const authTitle = $("authTitle");
-    const authSubmitBtn = $("authSubmitBtn");
-    const toggleAuthModeBtn = $("toggleAuthModeBtn");
-    const statusBar = $("statusBar");
-    const output = $("output");
-
-    let isLoginMode = true;
     let lastResult = null;
+    let isLoginMode = true;
 
     function setStatus(message, type = "") {
-      statusBar.textContent = message;
-      statusBar.className = "status-bar" + (type ? ` ${type}` : "");
+      const bar = $("statusBar");
+      bar.textContent = message;
+      bar.className = "status-bar" + (type ? ` ${type}` : "");
+    }
+
+    function setActionState(enabled) {
+      ["copyBtn", "saveToLibraryBtn", "docxBtn", "pdfBtn"].forEach(id => {
+        $(id).disabled = !enabled;
+      });
+    }
+
+    function getToken() {
+      return localStorage.getItem("richardAIAuthToken") || "";
+    }
+
+    async function apiFetch(path, options = {}) {
+      const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+      const token = getToken();
+      if (token) headers.Authorization = `Bearer ${token}`;
+      const response = await fetch(path, { ...options, headers });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`);
+      return data;
     }
 
     function renderCurriculumOptions() {
+      const curSel = $("curriculum");
+      const gradeSel = $("grade");
       curSel.innerHTML = "";
-      Object.keys(CURRICULA).forEach(cur => {
-        curSel.add(new Option(cur, cur));
-      });
-      for (let g = 1; g <= 12; g++) {
-        gradeSel.add(new Option("Class " + g, "Class " + g));
-      }
+      Object.keys(CURRICULA).forEach(curriculum => curSel.add(new Option(curriculum, curriculum)));
+      gradeSel.innerHTML = "";
+      for (let g = 1; g <= 12; g++) gradeSel.add(new Option("Class " + g, "Class " + g));
       refreshSubjects();
     }
 
     function refreshSubjects() {
+      const curSel = $("curriculum");
+      const subSel = $("subject");
       const selected = curSel.value || Object.keys(CURRICULA)[0];
       subSel.innerHTML = "";
-      CURRICULA[selected].subjects.forEach(subject => {
-        subSel.add(new Option(subject, subject));
-      });
+      CURRICULA[selected].subjects.forEach(subject => subSel.add(new Option(subject, subject)));
     }
 
     function renderResourceTypes() {
       const container = $("types");
       container.innerHTML = "";
-      RESOURCES.forEach((r, idx) => {
+      RESOURCES.forEach((resource, index) => {
         const item = document.createElement("div");
-        item.className = "type-option";
+        item.className = "type-item";
         item.innerHTML = `
-          <input type="radio" name="rtype" id="type-${r.id}" value="${r.id}" ${idx === 0 ? "checked" : ""} />
-          <label for="type-${r.id}">${r.label}</label>
+          <input type="radio" name="rtype" id="type-${resource.id}" value="${resource.id}" ${index === 0 ? "checked" : ""} />
+          <label for="type-${resource.id}">${resource.label}</label>
         `;
         container.appendChild(item);
       });
     }
 
-    function getCurrentOptions() {
+    function currentOptions() {
       return {
-        curriculum: curSel.value,
-        grade: gradeSel.value,
-        subject: subSel.value,
+        curriculum: $("curriculum").value,
+        grade: $("grade").value,
+        subject: $("subject").value,
         topic: $("topic").value.trim(),
         duration: $("duration").value,
         count: $("count").value,
@@ -490,19 +458,19 @@ Duration: ${options.duration} minutes
 Learner level: ${options.level}
 Output language: ${options.language}
 Follow the scope and sequence of the ${options.curriculum} syllabus for this class and subject. If the topic is not in that syllabus, say so and suggest the closest syllabus topic.
-Use clear headings, numbered sections, and ready-to-use teacher-friendly formatting.`;
+Use clear headings, numbered sections, and teacher-friendly formatting.`;
 
       let extras = "";
-      if (options.esl) extras += `\nESL support: add simple sentence frames, key vocabulary with pronunciation, and a glossary. Focus where suitable on: ${ESL_FOCUS.join(", ")}.`;
+      if (options.esl) extras += `\nESL support: add simple sentence frames, key vocabulary, pronunciation support, and a glossary. Focus where relevant on: ${ESL_FOCUS.join(", ")}.`;
       if (options.qatar) extras += "\nInclude Qatar National Values with a concrete classroom example.";
       if (options.sdg) extras += "\nLink the lesson to relevant UN Sustainable Development Goals and name each goal number.";
-      if (options.exam) extras += "\nUse exam-style questions with mark allocations matching the curriculum assessment format.";
+      if (options.exam) extras += "\nUse exam-style questions with appropriate mark allocations.";
       if (options.answers) extras += "\nInclude a complete answer key at the end.";
 
       const templates = {
         video: `Create a complete educational video lesson script.\n${base}\nInclude: 1. Video title 2. Learning objectives 3. Scene-by-scene script with timings 4. Teacher narration 5. On-screen text 6. Subtitles 7. Visual suggestions 8. Recap 9. ${options.count} practice questions 10. Teacher notes.${extras}`,
         lessonplan: `Create a detailed lesson plan.\n${base}\nInclude: learning objectives, success criteria, prior knowledge, warm-up, main activities with timings, differentiation, resources, assessment, homework, and teacher reflection prompts.${extras}`,
-        dlp: `Create a Daily Lesson Plan (DLP).\n${base}\nInclude: learning objectives, learning outcomes, previous knowledge, teaching-learning strategies, teacher activities, student activities, cross-curricular integration, assessment, differentiation, and reflection. Present the plan in a teacher-friendly table format.${extras}`,
+        dlp: `Create a Daily Lesson Plan (DLP).\n${base}\nInclude: learning objectives, learning outcomes, previous knowledge, teaching-learning strategies, teacher activities, student activities, cross-curricular integration, assessment, differentiation, and reflection.${extras}`,
         notes: `Create student-friendly notes.\n${base}\nInclude: key definitions, detailed explanation, worked examples, diagram descriptions, ${options.count} short-answer questions, long-answer questions, MCQs, fill-in-the-blanks, and a revision summary.${extras}`,
         worksheet: `Create a printable student worksheet.\n${base}\nInclude ${options.count} varied questions (MCQ, fill-in-the-blank, short answer, matching), clear instructions for each section, and space markers for answers.${extras}`,
         qpaper: `Create a question paper.\n${base}\nInclude a header (class, subject, time, maximum marks), sections A/B/C with ${options.count} questions in total, marks for each question, a mark distribution table, and a marking scheme.${extras}`,
@@ -515,19 +483,14 @@ Use clear headings, numbered sections, and ready-to-use teacher-friendly formatt
     }
 
     async function callAI(prompt) {
-      const res = await fetch(CONFIG.endpoint, {
+      const result = await apiFetch(CONFIG.endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt })
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.text) {
-        throw new Error(data.error || `Server returned ${res.status}`);
-      }
-      return data.text;
+      return result.text;
     }
 
-    function getProjects() {
+    function readProjects() {
       try {
         return JSON.parse(localStorage.getItem("richardAIProjects") || "[]");
       } catch {
@@ -537,66 +500,58 @@ Use clear headings, numbered sections, and ready-to-use teacher-friendly formatt
 
     function saveProjects(projects) {
       localStorage.setItem("richardAIProjects", JSON.stringify(projects));
-      renderProjects();
+      renderSavedProjects();
     }
 
-    function renderProjects() {
+    async function fetchProjectsFromServer() {
+      try {
+        const data = await apiFetch("/api/projects");
+        localStorage.setItem("richardAIProjects", JSON.stringify(data.projects || []));
+        renderSavedProjects();
+      } catch {
+        renderSavedProjects();
+      }
+    }
+
+    function renderSavedProjects() {
       const list = $("projectList");
-      list.innerHTML = "";
-      const projects = getProjects();
+      const projects = readProjects();
       $("statProjects").textContent = String(projects.length || 0);
+      list.innerHTML = "";
 
       if (!projects.length) {
-        list.innerHTML = '<div class="project-item"><div class="project-meta"><span class="title">No saved projects yet</span><span class="date">Generate your first lesson set</span></div></div>';
+        list.innerHTML = '<div class="project-item"><div class="project-meta"><span class="title">No saved projects yet</span><span class="date">Generate something to start building your library</span></div></div>';
         return;
       }
 
       projects.forEach((project, index) => {
-        const row = document.createElement("div");
-        row.className = "project-item";
-        row.innerHTML = `
+        const item = document.createElement("div");
+        item.className = "project-item";
+        item.innerHTML = `
           <div class="project-meta">
             <span class="title">${project.title}</span>
-            <span class="date">${project.date || "Recent"}</span>
+            <span class="date">${new Date(project.date || Date.now()).toLocaleString()}</span>
           </div>
           <div class="project-actions">
-            <button class="mini-btn" data-open="${index}">Open</button>
-            <button class="mini-btn" data-delete="${index}">Delete</button>
+            <button class="mini-btn" data-action="open" data-index="${index}">Open</button>
+            <button class="mini-btn" data-action="delete" data-index="${index}">Delete</button>
           </div>
         `;
 
-        row.querySelector("[data-open]").addEventListener("click", () => {
+        item.querySelector("[data-action='open']").addEventListener("click", () => {
           lastResult = project;
-          output.textContent = project.text;
-          setStatus("Loaded from library.", "success");
+          $("output").textContent = project.text;
           setActionState(true);
+          setStatus("Loaded project from library.", "success");
         });
 
-        row.querySelector("[data-delete]").addEventListener("click", () => {
-          const updated = getProjects().filter((_, i) => i !== index);
+        item.querySelector("[data-action='delete']").addEventListener("click", () => {
+          const updated = readProjects().filter((_, i) => i !== index);
           saveProjects(updated);
         });
 
-        list.appendChild(row);
+        list.appendChild(item);
       });
-    }
-
-    function setActionState(enabled) {
-      ["copyBtn", "saveToLibraryBtn", "docxBtn", "pdfBtn"].forEach(id => {
-        $(id).disabled = !enabled;
-      });
-    }
-
-    function saveCurrentProject() {
-      if (!lastResult) {
-        setStatus("Generate content before saving it.", "error");
-        return;
-      }
-
-      const projects = getProjects();
-      projects.unshift(lastResult);
-      saveProjects(projects.slice(0, 100));
-      setStatus("Saved to your library.", "success");
     }
 
     function escapeHtml(value) {
@@ -615,7 +570,7 @@ Use clear headings, numbered sections, and ready-to-use teacher-friendly formatt
       const blob = new Blob([html], { type: "application/msword" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `${lastResult.title.replace(/[^\w\- ]+/g, "").slice(0, 80)}.doc`;
+      a.download = `${String(lastResult.title || "document").replace(/[^\w\- ]+/g, "").slice(0, 80)}.doc`;
       a.click();
       URL.revokeObjectURL(a.href);
       setStatus("Word file prepared.", "success");
@@ -623,106 +578,125 @@ Use clear headings, numbered sections, and ready-to-use teacher-friendly formatt
 
     function printPdf() {
       if (!lastResult) return;
-      const printWindow = window.open("", "_blank");
-      if (!printWindow) {
+      const w = window.open("", "_blank");
+      if (!w) {
         setStatus("Allow pop-ups to print or save as PDF.", "error");
         return;
       }
-
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>${escapeHtml(lastResult.title)}</title>
-            <style>body{font-family:Arial;padding:24px;line-height:1.5;} pre{white-space:pre-wrap;}</style>
-          </head>
-          <body>
-            <h2>${escapeHtml(lastResult.title)}</h2>
-            <pre>${escapeHtml(lastResult.text)}</pre>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      printWindow.print();
+      w.document.write(`<!doctype html><html><head><title>${escapeHtml(lastResult.title)}</title><style>body{font-family:Arial;padding:24px;line-height:1.6} pre{white-space:pre-wrap}</style></head><body><h2>${escapeHtml(lastResult.title)}</h2><pre>${escapeHtml(lastResult.text)}</pre></body></html>`);
+      w.document.close();
+      w.focus();
+      w.print();
       setStatus("Print dialog opened.", "success");
     }
 
     function toggleAuthModal(show) {
-      authModal.classList.toggle("open", show);
-      authModal.setAttribute("aria-hidden", String(!show));
+      const modal = $("authModal");
+      modal.classList.toggle("open", show);
+      modal.setAttribute("aria-hidden", String(!show));
     }
 
-    function saveCurrentUser(name, email) {
-      localStorage.setItem("richardAIUser", JSON.stringify({ name, email }));
+    function setUserBadge(name) {
       $("userTag").textContent = name || "Guest";
-      $("loginBtn").textContent = "Profile";
-      $("signupBtn").textContent = "New project";
     }
 
-    function getCurrentUser() {
-      try {
-        return JSON.parse(localStorage.getItem("richardAIUser") || "null");
-      } catch {
-        return null;
+    function loadSession() {
+      const token = getToken();
+      if (!token) {
+        setUserBadge("Guest");
+        return;
       }
+      apiFetch("/api/session")
+        .then(({ user }) => {
+          setUserBadge(user.name || user.email || "User");
+        })
+        .catch(() => {
+          localStorage.removeItem("richardAIAuthToken");
+          setUserBadge("Guest");
+        });
     }
 
-    function initAuthUI() {
-      const user = getCurrentUser();
-      if (user) {
-        $("userTag").textContent = user.name || "Teacher";
-        $("loginBtn").textContent = "Profile";
-        $("signupBtn").textContent = "New project";
-      }
-    }
-
-    function handleAuthSubmit() {
+    async function handleAuthSubmit() {
       const name = $("authName").value.trim();
       const email = $("authEmail").value.trim();
       const password = $("authPassword").value.trim();
 
-      if (!email || !password) {
-        setStatus("Please enter an email and password.", "error");
+      try {
+        let response;
+        if (isLoginMode) {
+          response = await apiFetch("/api/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+          });
+        } else {
+          if (!name || password.length < 6) {
+            throw new Error("Please enter a name and a password with at least 6 characters.");
+          }
+          response = await apiFetch("/api/register", {
+            method: "POST",
+            body: JSON.stringify({ name, email, password })
+          });
+        }
+
+        localStorage.setItem("richardAIAuthToken", response.token);
+        setUserBadge(response.user?.name || response.user?.email || "User");
+        toggleAuthModal(false);
+        setStatus(`Welcome, ${response.user?.name || response.user?.email}. Ready to generate.`, "success");
+        await fetchProjectsFromServer();
+      } catch (error) {
+        setStatus(error.message, "error");
+      }
+    }
+
+    async function saveCurrentProject() {
+      if (!lastResult) {
+        setStatus("Generate content before saving it.", "error");
         return;
       }
 
-      saveCurrentUser(name || email.split("@")[0], email);
-      toggleAuthModal(false);
-      setStatus(`Welcome, ${name || email}. Ready to generate resources.`, "success");
+      try {
+        await apiFetch("/api/projects", {
+          method: "POST",
+          body: JSON.stringify({
+            title: lastResult.title,
+            text: lastResult.text,
+            type: lastResult.type || "resource"
+          })
+        });
+        await fetchProjectsFromServer();
+        setStatus("Saved to your library.", "success");
+      } catch (error) {
+        setStatus(error.message, "error");
+      }
     }
 
     function bindEvents() {
       $("curriculum").addEventListener("change", refreshSubjects);
+
       $("generateBtn").addEventListener("click", async () => {
-        const options = getCurrentOptions();
-        if (!options.topic) {
+        const options = currentOptions();
+        if (!options.topic.trim()) {
           setStatus("Please enter a topic or chapter name.", "error");
           return;
         }
 
         setStatus("Generating content... this can take 20–60 seconds.", "");
-        output.textContent = "";
+        $("output").textContent = "";
 
         try {
           const prompt = buildPrompt(options);
           const text = await callAI(prompt);
           const title = `${RESOURCES.find(r => r.id === options.type)?.label || "Resource"} - ${options.subject} ${options.grade} - ${options.topic}`;
-          lastResult = {
-            title,
-            text,
-            date: new Date().toLocaleString(),
-            type: options.type
-          };
-          output.textContent = text;
+          lastResult = { title, text, date: new Date().toISOString(), type: options.type };
+          $("output").textContent = text;
           setActionState(true);
           setStatus("Done. Copy, save, or export your content.", "success");
         } catch (error) {
-          console.error(error);
           setStatus(`Could not generate: ${error.message}`, "error");
         }
       });
 
-      $("saveProjectBtn").addEventListener("click", saveCurrentProject);
+      $("saveDraftBtn").addEventListener("click", saveCurrentProject);
       $("saveToLibraryBtn").addEventListener("click", saveCurrentProject);
       $("copyBtn").addEventListener("click", async () => {
         if (!lastResult) return;
@@ -734,13 +708,15 @@ Use clear headings, numbered sections, and ready-to-use teacher-friendly formatt
 
       $("loginBtn").addEventListener("click", () => {
         isLoginMode = true;
-        authTitle.textContent = "Welcome back";
+        $("authTitle").textContent = "Welcome back";
+        $("toggleAuthModeBtn").textContent = "Create account";
         toggleAuthModal(true);
       });
 
       $("signupBtn").addEventListener("click", () => {
         isLoginMode = false;
-        authTitle.textContent = "Create your account";
+        $("authTitle").textContent = "Create your account";
+        $("toggleAuthModeBtn").textContent = "Login";
         toggleAuthModal(true);
       });
 
@@ -748,21 +724,21 @@ Use clear headings, numbered sections, and ready-to-use teacher-friendly formatt
       $("authSubmitBtn").addEventListener("click", handleAuthSubmit);
       $("toggleAuthModeBtn").addEventListener("click", () => {
         isLoginMode = !isLoginMode;
-        authTitle.textContent = isLoginMode ? "Welcome back" : "Create your account";
+        $("authTitle").textContent = isLoginMode ? "Welcome back" : "Create your account";
         $("toggleAuthModeBtn").textContent = isLoginMode ? "Create account" : "Login";
       });
 
-      $("authModal").addEventListener("click", e => {
-        if (e.target === authModal) toggleAuthModal(false);
+      $("authModal").addEventListener("click", event => {
+        if (event.target === $("authModal")) toggleAuthModal(false);
       });
     }
 
     renderCurriculumOptions();
     renderResourceTypes();
-    renderProjects();
-    setActionState(false);
-    initAuthUI();
     bindEvents();
+    setActionState(false);
+    loadSession();
+    renderSavedProjects();
   </script>
 </body>
 </html>
