@@ -1,13 +1,22 @@
 {
   "name": "richard-ai-studio",
-  "version": "1.0.0",
-  "description": "AI Educational Content Studio: video scripts, lesson plans, DLPs, notes, worksheets, question papers, flashcards, rubrics, quizzes and slides for every curriculum.",
+  "version": "2.0.0",
+  "description": "AI educational content studio with PostgreSQL-backed accounts and projects.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "check": "node --check server.js"
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
   },
   "license": "UNLICENSED"
 }

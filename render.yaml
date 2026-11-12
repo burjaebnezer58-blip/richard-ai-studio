@@ -4,10 +4,16 @@ services:
     runtime: node
     plan: free
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: npm start
     healthCheckPath: /health
     envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: STUDIO_MODEL
         value: claude-sonnet-5-5
+      - key: TRUST_PROXY
+        value: "true"
