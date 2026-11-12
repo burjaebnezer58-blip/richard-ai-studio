@@ -1,54 +1,36 @@
 # Richard AI Studio
 
-An AI educational-content generator for teachers. It includes a responsive web app, a Node.js/Express API, PostgreSQL-backed accounts and projects, and server-side Anthropic API integration.
-
-## Features
-
-- Generate lesson plans, daily lesson plans, notes, worksheets, question papers, flashcards, rubrics, quizzes, video scripts, and slide outlines.
-- Register and log in with passwords hashed using bcrypt.
-- Signed 24-hour bearer tokens for API sessions.
-- Persist users and saved projects in PostgreSQL.
-- Projects are scoped to their owner; the API supports listing, saving, and deleting them.
-- Keep the Anthropic API key on the server.
-- Export generated content from the browser as a Word-compatible document or print/PDF.
+An AI educational-content generator with a responsive frontend, Express API, PostgreSQL-backed accounts and projects, and server-side Anthropic integration.
 
 ## Run locally
 
 Requirements: Node.js 18+ and PostgreSQL.
 
-1. Create a PostgreSQL database, for example `richard_ai`.
-2. Copy `.env.example` to `.env` and set `DATABASE_URL`, `SESSION_SECRET`, and `ANTHROPIC_API_KEY`.
+1. Create a PostgreSQL database.
+2. Copy `.env.example` to `.env`; configure `DATABASE_URL`, `SESSION_SECRET` (at least 32 characters), and `ANTHROPIC_API_KEY`.
 3. Install and start:
    ```sh
    npm install
    npm start
    ```
-4. Open http://localhost:3000. The server creates the required tables from `db/schema.sql` on startup.
+4. Open http://localhost:3000. The API initializes tables from `db/schema.sql` when starting.
 
-Set a long, unique `SESSION_SECRET` (at least 32 characters) in every deployed environment. Never commit `.env` or API keys.
+## App features
 
-## Render deployment
+- Register/login and signed bearer sessions.
+- Generate lesson plans, DLPs, notes, worksheets, question papers, flashcards, rubrics, quizzes, video scripts, and slide outlines.
+- Save, open, and delete user-owned projects in PostgreSQL.
+- Copy, Word-compatible export, and print/save as PDF.
+- Server-side API key storage; never place provider keys in frontend code.
 
-1. Create a PostgreSQL database in Render and a Node web service connected to this repository.
-2. Set the web service environment variables: `DATABASE_URL` (from the Render database's internal connection string), `SESSION_SECRET` (a unique random secret of at least 32 characters), and `ANTHROPIC_API_KEY`. Optionally set `STUDIO_MODEL`.
-3. Build command: `npm install`. Start command: `npm start`. Health check path: `/health`.
-4. Set `TRUST_PROXY=true` when deployed behind Render's proxy.
+## Environment
 
-The repository's `render.yaml` configures the web service, but the database and secrets should be created/configured in Render so deployment does not silently provision a billable database or commit credentials.
+See `.env.example`. Production must use a unique random `SESSION_SECRET`; set `TRUST_PROXY=true` behind Render's proxy. Do not commit `.env` or secrets.
 
-## API
+## Deploy on Render
 
-- `POST /api/register` — `{ "name", "email", "password" }` (password must be at least 10 characters); returns `{ token, user }`.
-- `POST /api/login` — `{ "email", "password" }`; returns `{ token, user }`.
-- `GET /api/session` — authenticated user profile.
-- `GET /api/projects` — authenticated user's latest 100 projects.
-- `POST /api/projects` — authenticated save, accepts `{ "title", "text", "type" }`.
-- `DELETE /api/projects/:id` — deletes a project belonging to the authenticated user.
-- `POST /api/generate` — authenticated generation, accepts `{ "prompt" }`.
-- `GET /health` — reports app/database health.
+Connect this repository as a Node web service, use `npm install` / `npm start`, and set `/health` as health check. Configure `DATABASE_URL`, `SESSION_SECRET`, and `ANTHROPIC_API_KEY` in the Render dashboard. Set `TRUST_PROXY=true`. The provided `render.yaml` describes the web service; create/configure the Postgres database separately and use its connection string.
 
-Authenticated routes use `Authorization: Bearer <token>`.
+## Current scope
 
-## Production scope
-
-This provides database-backed auth/projects and an AI generation endpoint; it does not yet include Stripe billing, password-reset email, OAuth, team workspaces, database backups, or a full multi-provider model selector. Add those separately before treating it as a complete commercial SaaS product. The browser stores the bearer token in local storage in the current UI; for higher-security production deployments, replace that with secure, HttpOnly, SameSite cookies and CSRF protection.
+This version includes PostgreSQL auth/projects and AI generation. It does not yet include Stripe billing, team workspaces, password reset, OAuth, or multi-provider model selection. The browser currently uses a bearer token in localStorage; for higher-security deployments, consider migrating to Secure, HttpOnly, SameSite cookies with CSRF protection.
