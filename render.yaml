@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: richard-ai-studio
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: STUDIO_MODEL
+        value: claude-sonnet-5-5

@@ -1,0 +1,13 @@
+{
+  "name": "richard-ai-studio",
+  "version": "1.0.0",
+  "description": "AI Educational Content Studio: video scripts, lesson plans, DLPs, notes, worksheets, question papers, flashcards, rubrics, quizzes and slides for every curriculum.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
